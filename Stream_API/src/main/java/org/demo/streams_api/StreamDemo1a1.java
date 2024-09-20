@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StreamDemo1 {
+public class StreamDemo1a1 {
     // 5: Find Nth Highest Salary Using Java Streams API
 
     public static void main(String[] args) {
