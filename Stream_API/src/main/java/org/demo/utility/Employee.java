@@ -30,6 +30,14 @@ public class Employee {
                 "}";
     }
 
+    public String printEmpIdNameSalary(){
+        return "Employee{" +
+                "empId=" + empId +
+                ", empName='" + empName + '\'' +
+                ", empSalary=" + empSalary +
+                "}";
+    }
+
     public Integer getEmpId() {
         return empId;
     }

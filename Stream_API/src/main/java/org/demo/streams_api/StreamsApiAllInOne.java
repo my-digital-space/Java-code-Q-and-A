@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class StreamsApiAllInOne {
     public static void main(String[] args) {
-        /* 1.
+        /** 1.
            Employee list - department wise total salary.
 
            Input:
@@ -45,7 +45,7 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n1. Employee list - department wise total salary");
         CommonUtils.printMap(totalSalariesByDepartment);
 
-        /* 2.
+        /** 2.
            Employee list - filter with age greater than 45
 
            Input:
@@ -69,7 +69,7 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n2. Employee list - filter with age greater than 45");
         CommonUtils.printList(filteredEmployees);
 
-        /* 3.
+        /** 3.
            Employee list - Find Nth Highest Salary Using Java Streams API
 
            Note:
@@ -109,7 +109,7 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n3. Employee list - Find Nth (5th) Highest Salary Using Java Streams API");
         CommonUtils.printList(empListOutput);
 
-        /* 4.
+        /** 4.
            Product list -> each product has an inventory count -> we need total inventory count
 
            Input:
@@ -133,7 +133,7 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n4. Product list -> each product has an inventory count -> we need total inventory count");
         System.out.println("Total Inventory: " + totalInventory);
 
-        /* 5.
+        /** 5.
            Duplicate Strings in List of Strings to Map containing Count for each String
 
            Input:
@@ -157,6 +157,140 @@ public class StreamsApiAllInOne {
 
         System.out.println("\n\n\n5. Duplicate Strings in List of Strings to Map containing Count for each String");
         CommonUtils.printMap(stringCountMap);
+
+        /** 6.
+           Convert each word's first character to uppercase from a given sentence. | Title Case
+
+           Input:
+            String | Sentence
+            i am your boss
+
+           Output:
+            I Am Your Boss
+         */
+        String mySentence = "i am your boss";
+
+        String result = Arrays.stream(mySentence.split(" "))  // Split sentence into words
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))  // Capitalize first letter
+                .collect(Collectors.joining(" "));  // Join words back into a sentence
+
+        System.out.println("\n\n\n6. Convert each word's first character to uppercase from a given sentence. | Title Case");
+        System.out.println("Input: " + mySentence);
+        System.out.println("Output: " + result);
+
+        /** 7.
+           Compare input sentence's each word to given count.
+
+           Inputs:
+            String | Sentence
+            you are the boss
+
+            int desiredLength = 3;
+
+           Output (Map<Boolean, List<String>>):
+            false : [boss]
+            true : [you, are, the]
+
+            Group 1 (true): Words whose length is less than or equal to 'desiredLength'
+            Group 2 (false): Words whose length is greater than 'desiredLength'
+         */
+        mySentence = "you are the boss";
+        int desiredLength = 3;
+
+        Map<Boolean, List<String>> result1 = Arrays.stream(mySentence.split(" "))  // Split sentence into words
+                .collect(Collectors.partitioningBy(word -> word.length() <= desiredLength));
+        System.out.println("\n\n\n7. Compare input sentence's each word to given count.");
+        System.out.println("Input: " + mySentence + "\nOutput:");
+        CommonUtils.printMap(result1);
+
+        /** 8a.
+           Partition a List of Integers into Even and Odd Numbers
+
+           Input:
+            Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+           Output:
+            false : [boss]
+            true : [you, are, the]
+
+         */
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+        Map<Boolean, List<Integer>> result2 = numbers.stream()
+                .collect(Collectors.partitioningBy(num -> num % 2 == 0));  // Partition by even/odd
+        System.out.println("\n\n\n8a. Partition a List of Integers into Even and Odd Numbers");
+        System.out.println("Input: " + numbers + "\nOutput:");
+        CommonUtils.printMap(result2);
+
+        // 8b. in the above code if we want the output like (even/odd) instead of (true/false):
+        /**
+         *      even : [2, 4, 6, 8]
+         *      odd : [1, 3, 5, 7, 9]
+         */
+        Map<String, List<Integer>> result3 = numbers.stream()
+                .collect(Collectors.partitioningBy(num -> num % 2 == 0))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey() ? "even" : "odd",  // Map true to "even" and false to "odd"
+                        Map.Entry::getValue
+                ));
+        System.out.println("\n\n\n8b. Partition a List of Integers into Even and Odd Numbers");
+        System.out.println("Input: " + numbers + "\nOutput:");
+        CommonUtils.printMap(result3);
+
+        /** 9.
+         Partition a List of Strings Based on Whether They Start with a Vowel
+
+         Input:
+         [apple, banana, orange, grape, elephant]
+
+         Output:
+         false : [banana, grape]
+         true : [apple, orange, elephant]
+
+         */
+        List<String> words = Arrays.asList("apple", "banana", "orange", "grape", "elephant");
+
+        Map<Boolean, List<String>> result4 =
+                words.stream()
+                .collect(Collectors.partitioningBy(word ->
+                        word.toLowerCase().matches("^[aeiou].*")));  // Check if the word starts with a vowel
+
+        System.out.println("\n\n\n9. Partition a List of Strings Based on Whether They Start with a Vowel");
+        System.out.println("Input: " + words + "\nOutput:");
+        CommonUtils.printMap(result4);
+
+        /** 10.
+         Partition Employees Based on Their Salary
+
+         Inputs:
+         List of Employees
+         Employee(Integer empId, String empName, String empDepartment, BigDecimal empSalary, Integer age)
+         new Employee(1, "Name 1", "HR Department", BigDecimal.valueOf(100.00), 30);
+         new Employee(2, "Name 2", "HR Department", BigDecimal.valueOf(300.00), 26);
+         new Employee(3, "Name 3", "IT Department", BigDecimal.valueOf(600.00), 45);
+         new Employee(4, "Name 4", "HR Department", BigDecimal.valueOf(200.00), 55);
+         new Employee(5, "Name 5", "IT Department", BigDecimal.valueOf(400.00), 60);
+
+         salaryThreshold = new BigDecimal("300");
+
+         Output:
+         false : Employee{empId=1, empName='EmpName1', empSalary=200.0}, Employee{empId=3, empName='EmpName3', empSalary=100.0},
+                Employee{empId=4, empName='EmpName4', empSalary=100.0}, Employee{empId=5, empName='EmpName5', empSalary=100.0},
+                Employee{empId=6, empName='EmpName6', empSalary=300.0}
+
+         true : Employee{empId=2, empName='EmpName2', empSalary=400.0},
+                Employee{empId=7, empName='EmpName7', empSalary=500.0}
+
+         */
+        BigDecimal salaryThreshold = new BigDecimal("300");
+
+        Map<Boolean, List<Employee>> result5 = employeeList.stream()
+                .collect(Collectors.partitioningBy(emp -> emp.getEmpSalary().compareTo(salaryThreshold) > 0));
+
+        System.out.println("\n\n\n10. Partition Employees Based on Their Salary");
+        System.out.println("Input Salary: " + salaryThreshold + "\nOutput:");
+        CommonUtils.printEmployeeMapNameIDAndSalary(result5);
 
     }
 }
