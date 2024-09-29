@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 public class StreamsApiAllInOne {
@@ -291,6 +294,99 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n10. Partition Employees Based on Their Salary");
         System.out.println("Input Salary: " + salaryThreshold + "\nOutput:");
         CommonUtils.printEmployeeMapNameIDAndSalary(result5);
+
+        /** 11.
+         Unbounded Random Number Generation
+
+         Inputs:
+         NA
+
+         Output:
+         -604469257 181441029 -1222526076 1854340550 -962287588 1726102591 -888990578 66195117 999139408 708596861
+
+         */
+        Random random = new Random();
+
+        // Unbounded stream of random integers
+        Stream<Integer> unboundedRandomNumbers = Stream.generate(random::nextInt);
+
+        // Print the first 10 random integers
+        String result6 = unboundedRandomNumbers
+                .limit(10) // Limit to 10 numbers
+                .map(String::valueOf) // Convert each integer to string
+                .collect(Collectors.joining(" ")); // Join by space
+        System.out.println("\n\n\n11. Unbounded Random Number Generation");
+        System.out.println("Output:");
+        System.out.println(result6);
+
+        /** 12.
+         Bounded Random Number Generation (within range 1 to 100)
+
+         Inputs:
+         NA
+
+         Output:
+         91 83 26 32 99 29 23 16 79 8
+
+         */
+        random = new Random();
+
+        // Bounded stream of random 10 integers (within range 1 to 100)
+        IntStream boundedRandomNumbers = random.ints(10, 1, 101);
+
+        // Print the first 10 random integers
+        String result7 = boundedRandomNumbers
+                // mapToObj() converts a primitive stream into a stream of objects
+                .mapToObj(String::valueOf) // Convert each integer to string
+                .collect(Collectors.joining(" ")); // Join by space
+        System.out.println("\n\n\n12. Bounded Random Number Generation (within range 1 to 100)");
+        System.out.println("Output:");
+        System.out.println(result7);
+
+        /** 13.
+         Random String Generation (Random Characters)
+
+         Inputs:
+         NA
+
+         Output:
+         91 83 26 32 99 29 23 16 79 8
+
+         */
+        Random random1 = new Random();
+        int stringLength = 10; // Length of each generated string
+
+        // Random string generation using lowercase letters
+        String randomString = IntStream.range(0, stringLength)
+                .map(i -> 'a' + random1.nextInt(26)) // Generate random character from 'a' to 'z'
+                .mapToObj(c -> String.valueOf((char) c)) // Convert int to character
+                .collect(Collectors.joining()); // Join characters to form the string
+
+        System.out.println("\n\n\n13. Random String Generation (Random Characters)");
+        System.out.println("Output: " + randomString);
+
+        /** 14.
+         Random String Generation from a Given Set of Words
+
+         Inputs:
+         {"apple", "banana", "cherry", "date", "elderberry", "fig", "grape"}
+
+         Output:
+         banana elderberry fig grape grape
+
+         */
+        Random random2 = new Random();
+        String[] wordsList = {"apple", "banana", "cherry", "date", "elderberry", "fig", "grape"};
+        int wordCount = 5; // Number of words to be included in the generated string
+
+        // Random string generation from a set of words
+        String randomWords = Stream.generate(() -> wordsList[random2.nextInt(wordsList.length)]) // Pick a random word
+                .limit(wordCount) // Limit to 'wordCount' number of words
+                .collect(Collectors.joining(" ")); // Join words with space
+
+        System.out.println("\n\n\n14. Random String Generation from a Given Set of Words");
+        System.out.println("Output: " + randomWords);
+
 
     }
 }
