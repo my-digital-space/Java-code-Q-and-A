@@ -8,12 +8,15 @@ public class Employee {
     private String empName;
     private String empDepartment;
     private BigDecimal empSalary;
+    private Integer age;
 
-    public Employee(Integer empId, String empName, String empDepartment, BigDecimal empSalary) {
+    public Employee(Integer empId, String empName, String empDepartment, BigDecimal empSalary,
+                    Integer age) {
         this.empId = empId;
         this.empName = empName;
         this.empDepartment = empDepartment;
         this.empSalary = empSalary;
+        this.age = age;
     }
 
     @Override
@@ -23,7 +26,8 @@ public class Employee {
                 ", empName='" + empName + '\'' +
                 ", empDepartment='" + empDepartment + '\'' +
                 ", empSalary=" + empSalary +
-                "} \n";
+                ", age=" + age +
+                "}";
     }
 
     public Integer getEmpId() {
@@ -56,5 +60,13 @@ public class Employee {
 
     public void setEmpSalary(BigDecimal empSalary) {
         this.empSalary = empSalary;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }
