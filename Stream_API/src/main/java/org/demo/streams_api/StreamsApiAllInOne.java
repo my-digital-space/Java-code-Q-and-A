@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -298,7 +299,7 @@ public class StreamsApiAllInOne {
         /** 11.
          Unbounded Random Number Generation
 
-         Inputs:
+         Input:
          NA
 
          Output:
@@ -322,7 +323,7 @@ public class StreamsApiAllInOne {
         /** 12.
          Bounded Random Number Generation (within range 1 to 100)
 
-         Inputs:
+         Input:
          NA
 
          Output:
@@ -346,7 +347,7 @@ public class StreamsApiAllInOne {
         /** 13.
          Random String Generation (Random Characters)
 
-         Inputs:
+         Input:
          NA
 
          Output:
@@ -368,7 +369,7 @@ public class StreamsApiAllInOne {
         /** 14.
          Random String Generation from a Given Set of Words
 
-         Inputs:
+         Input:
          {"apple", "banana", "cherry", "date", "elderberry", "fig", "grape"}
 
          Output:
@@ -386,6 +387,167 @@ public class StreamsApiAllInOne {
 
         System.out.println("\n\n\n14. Random String Generation from a Given Set of Words");
         System.out.println("Output: " + randomWords);
+
+        /** 15.
+         Find the sum of the max and min number from a list of integers
+
+         Input:
+         Arrays.asList(3, 7, 2, 9, 5)
+
+         Output:
+         11 (9(max) + 2(min))
+
+         */
+        List<Integer> numbers1 = Arrays.asList(3, 7, 2, 9, 5);
+
+        int sum = numbers1.stream().collect(Collectors.summarizingInt(Integer::intValue)).getMax()
+                + numbers1.stream().collect(Collectors.summarizingInt(Integer::intValue)).getMin();
+
+        System.out.println("\n\n\n15. Find the sum of the max and min number from a list of integers");
+        System.out.println("Output: " + sum);
+
+        /** 16.
+         Find the sum of numbers after removing the min and max from a list of integers
+
+         Input:
+         Arrays.asList(3, 7, 2, 9, 5)
+
+         Output:
+         15 (3+7+5) after removing (9(max) and 2(min))
+
+         */
+        List<Integer> numbers2 = Arrays.asList(3, 7, 2, 9, 5);
+
+        int sum2 = numbers2.stream()
+                .filter(num -> num != numbers2.stream().max(Integer::compareTo).get()
+                        && num != numbers2.stream().min(Integer::compareTo).get())
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        System.out.println("\n\n\n16. Find the sum of numbers after removing the min and max from a list of integers");
+        System.out.println("Output: " + sum2);
+
+        /** 17.
+         Use parallel stream: Find the sum of squares of all the numbers in a list of integers
+
+         Input:
+         Arrays.asList(2, 4, 6)
+
+         Output:
+         56 (4 + 16 + 36)
+
+         */
+        List<Integer> numbers3 = Arrays.asList(2, 4, 6);
+
+        // Using parallel stream to calculate sum of squares
+        int sumOfSquares = numbers3.parallelStream()
+                .mapToInt(num -> num * num)
+                .sum();
+
+        System.out.println("\n\n\n17. Use parallel stream: Find the sum of squares of all the numbers in a list of integers");
+        System.out.println("Output: " + sumOfSquares);
+
+        /** 18.
+         Use parallel stream: Find the max number from a large list of integers
+
+         Input:
+         Arrays.asList(3, 7, 1, 5, 9, 12, 4, 8, 2)
+
+         Output:
+         12
+
+         */
+        List<Integer> numbers4 = Arrays.asList(3, 7, 1, 5, 9, 12, 4, 8, 2);
+
+        // Using parallel stream to find the maximum value
+        int maxValue = numbers4.parallelStream()
+                .mapToInt(num -> num)
+                .max()
+                .orElseThrow(() -> new RuntimeException("List is empty"));
+
+        System.out.println("\n\n\n18. Use parallel stream: Find the max number from a large list of integers");
+        System.out.println("Output: " + maxValue);
+
+        /** 19.
+         Use parallel stream: Count the total number of words from a list of sentences(Strings)
+
+         Input:
+         Arrays.asList(
+         "Parallel streams can improve performance",
+         "Streams are powerful tools in Java",
+         "Parallel streams use multiple threads"
+         )
+
+         Output:
+         16
+
+         */
+        List<String> sentences = Arrays.asList(
+                "Parallel streams can improve performance",
+                "Streams are powerful tools in Java",
+                "Parallel streams use multiple threads"
+        );
+
+        // Using parallel stream to count words
+        long wordCount1 = sentences.parallelStream()
+                .mapToLong(sentence -> sentence.split(" ").length)
+                .sum();
+
+        System.out.println("\n\n\n19. Use parallel stream: Count the total number of words from a list of sentences(Strings)");
+        System.out.println("Output: " + wordCount1);
+
+        /** 20.
+         Use parallel stream: Find the longest string from a list of Strings
+
+         Input:
+         Arrays.asList("performance", "streams", "parallel", "Java", "optimization")
+
+         Output:
+         optimization
+
+         */
+        List<String> words1 = Arrays.asList("performance", "streams", "parallel", "Java", "optimization");
+
+        // Parallel stream to find the longest string
+        String longestWord = words1.parallelStream()
+                .reduce((word1, word2) -> word1.length() > word2.length() ? word1 : word2)
+                .orElse("No words found");
+
+        System.out.println("\n\n\n20. Use parallel stream: Find the longest string from a list of Strings");
+        System.out.println("Output: " + longestWord);
+
+        /** 21.
+         Use parallel stream: Employees group by age and then count of Employees of that age
+
+         Input:
+         Arrays.asList("performance", "streams", "parallel", "Java", "optimization")
+
+         Output:
+         optimization
+
+         */
+        List<Employee> empList1 = EmployeesUtil.getEmployeeList1();
+
+        // Group by age and count in parallel
+        Map<Integer, Long> ageGroupCount =
+                empList1.parallelStream()
+                .collect(Collectors.groupingBy(
+                        emp -> emp.getAge(),
+                        Collectors.counting()
+                ))
+                        // for sorting by count in descending order:
+                        .entrySet()
+                        .stream()
+                        .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (e1, e2) -> e1,
+                                LinkedHashMap::new
+                        ));;
+
+        System.out.println("\n\n\n21. Use parallel stream: Employees group by age and then count of Employees of that age");
+        CommonUtils.printMap(ageGroupCount);
 
 
     }
