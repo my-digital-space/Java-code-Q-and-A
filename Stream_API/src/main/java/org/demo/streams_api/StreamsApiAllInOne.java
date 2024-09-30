@@ -9,10 +9,13 @@ import org.demo.utility.ProductsUtil;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
@@ -549,6 +552,139 @@ public class StreamsApiAllInOne {
         System.out.println("\n\n\n21. Use parallel stream: Employees group by age and then count of Employees of that age");
         CommonUtils.printMap(ageGroupCount);
 
+        /** 22.
+         Check if 2 words are Anagrams.
+         An anagram is a word or phrase formed by rearranging the letters of another word or phrase,
+         typically using all the original letters exactly once.
+         For example, "listen" is an anagram of "silent."
+
+         Inputs:
+         String word1 = "listen";
+         String word2 = "silent";
+
+         Output:
+         true
+
+         */
+        String word1 = "listen";
+        String word2 = "silent";
+        Boolean isAnagram = false;
+
+        // Normalize the strings by removing spaces and converting to lowercase
+        String normalizedWord1 = word1.replaceAll("\\s", "").toLowerCase();
+        String normalizedWord2 = word2.replaceAll("\\s", "").toLowerCase();
+
+        // If lengths are not equal, they can't be anagrams
+        if (normalizedWord1.length() != normalizedWord2.length()) {
+            isAnagram = false;
+        }
+
+        if(!isAnagram){
+            // Use Java streams to sort characters and compare them
+            String sortedWord1 = normalizedWord1.chars()
+                    .sorted()
+                    .mapToObj(c -> String.valueOf((char) c))
+                    .collect(Collectors.joining());
+
+            String sortedWord2 = normalizedWord2.chars()
+                    .sorted()
+                    .mapToObj(c -> String.valueOf((char) c))
+                    .collect(Collectors.joining());
+
+            isAnagram = sortedWord1.equals(sortedWord2);
+        }
+        System.out.println("\n\n\n22. Check if 2 words are Anagrams.");
+        System.out.println("Input: " + word1 + " and " + word2);
+        System.out.println("Output: " + isAnagram);
+
+        /** 23.
+         String compression.
+
+         Input:
+         aaabbbbcc
+
+         Output:
+         a3b4c2
+
+         */
+        String inputString = "aaabbbbcc";
+        String outputString = IntStream.range(0, inputString.length())
+                .boxed()
+                .collect(Collectors.groupingBy(i -> {
+                    // Group consecutive characters
+                    int j = i;
+                    while (j > 0 && inputString.charAt(j) == inputString.charAt(j - 1)) {
+                        j--;
+                    }
+                    return j;
+                }, Collectors.mapping(i -> inputString.charAt(i), Collectors.toList())))
+                .values().stream()
+                .map(list -> {
+                    char c = list.get(0);
+                    int count = list.size();
+                    return count > 1 ? c + String.valueOf(count) : String.valueOf(c);
+                })
+                .collect(Collectors.joining());
+
+        System.out.println("\n\n\n23. String compression.");
+        System.out.println("Input: " + inputString);
+        System.out.println("Output: " + outputString);
+
+        /** 24.
+         Employee -> first sort by Name and then if same name, sort by Salary
+
+         Input:
+         new Employee(1, "Name 1", "HR Department", BigDecimal.valueOf(300.00), 30),
+         new Employee(2, "Name 1", "HR Department", BigDecimal.valueOf(400.00), 26),
+         new Employee(3, "Name 3", "IT Department", BigDecimal.valueOf(600.00), 45),
+         new Employee(4, "Name 4", "HR Department", BigDecimal.valueOf(800.00), 55),
+         new Employee(5, "Name 4", "IT Department", BigDecimal.valueOf(400.00), 60),
+         new Employee(6, "Name 4", "IT Department", BigDecimal.valueOf(900.00), 60),
+         new Employee(7, "Name 5", "IT Department", BigDecimal.valueOf(400.00), 60)
+
+         Output:
+         Employee{empId=1, empName='Name 1', empSalary=300.0}
+         Employee{empId=2, empName='Name 1', empSalary=400.0}
+         Employee{empId=3, empName='Name 3', empSalary=600.0}
+         Employee{empId=5, empName='Name 4', empSalary=400.0}
+         Employee{empId=4, empName='Name 4', empSalary=800.0}
+         Employee{empId=6, empName='Name 4', empSalary=900.0}
+         Employee{empId=7, empName='Name 5', empSalary=400.0}
+
+         */
+        List<Employee> empList = EmployeesUtil.getEmployeeList2();
+
+        // Sorting by name first, and then by salary if names are the same
+        List<Employee> sortedEmployees = empList.stream()
+                .sorted(Comparator.comparing(Employee::getEmpName)
+                        .thenComparing(Employee::getEmpSalary))
+                .collect(Collectors.toList());
+
+        System.out.println("\n\n\n24. Employee -> first sort by Name and then if same name, sort by Salary");
+        CommonUtils.printEmployeeMapNameIDAndSalary(sortedEmployees);
+
+        /** 25.
+         Find the first repeating character from a given String input
+
+         Input:
+         swiss
+
+         Output:
+         s
+
+         */
+        String input1 = "swiss";
+
+        Set<Character> seen = new HashSet<>();
+        Character firstRepeatingChar = input1.chars()
+                .mapToObj(c -> (char) c)
+                .filter(c -> !seen.add(c))  // Add to the set and filter if it's already present
+                .findFirst()
+                .orElse(null);
+
+        System.out.println("\n\n\n25. Find the first repeating character from a given String input");
+        System.out.println("Input: " + input1);
+        System.out.println("Output: " + firstRepeatingChar);
 
     }
 }
