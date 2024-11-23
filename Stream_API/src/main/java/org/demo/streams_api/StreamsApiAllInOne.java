@@ -10,17 +10,20 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 public class StreamsApiAllInOne {
+    private static String printFlag = "all"; // values = "all"/"2"/"19"/etc.
     public static void main(String[] args) {
         /** 1.
            Employee list - department wise total salary.
@@ -49,8 +52,10 @@ public class StreamsApiAllInOne {
                                 BigDecimal::add
                         )
                 ));
-        System.out.println("\n\n\n1. Employee list - department wise total salary");
-        CommonUtils.printMap(totalSalariesByDepartment);
+        if(printFlag.equals("all") || printFlag.equals("1")){
+            System.out.println("\n\n\n1. Employee list - department wise total salary");
+            CommonUtils.printMap(totalSalariesByDepartment);
+        }
 
         /** 2.
            Employee list - filter with age greater than 45
@@ -73,8 +78,10 @@ public class StreamsApiAllInOne {
                 .filter(employee -> employee.getAge() > 45)
                 .toList();
 
-        System.out.println("\n\n\n2. Employee list - filter with age greater than 45");
-        CommonUtils.printList(filteredEmployees);
+        if(printFlag.equals("all") || printFlag.equals("2")) {
+            System.out.println("\n\n\n2. Employee list - filter with age greater than 45");
+            CommonUtils.printList(filteredEmployees);
+        }
 
         /** 3.
            Employee list - Find Nth Highest Salary Using Java Streams API
@@ -113,8 +120,10 @@ public class StreamsApiAllInOne {
                 .collect(Collectors.toList())
                 .get(n - 1); // Get the nth highest salary group
 
-        System.out.println("\n\n\n3. Employee list - Find Nth (5th) Highest Salary Using Java Streams API");
-        CommonUtils.printList(empListOutput);
+        if(printFlag.equals("all") || printFlag.equals("3")) {
+            System.out.println("\n\n\n3. Employee list - Find Nth (5th) Highest Salary Using Java Streams API");
+            CommonUtils.printList(empListOutput);
+        }
 
         /** 4.
            Product list -> each product has an inventory count -> we need total inventory count
@@ -137,8 +146,10 @@ public class StreamsApiAllInOne {
                 .mapToInt(Product::getInventoryCount)
                 .sum();
 
-        System.out.println("\n\n\n4. Product list -> each product has an inventory count -> we need total inventory count");
-        System.out.println("Total Inventory: " + totalInventory);
+        if(printFlag.equals("all") || printFlag.equals("4")) {
+            System.out.println("\n\n\n4. Product list -> each product has an inventory count -> we need total inventory count");
+            System.out.println("Total Inventory: " + totalInventory);
+        }
 
         /** 5.
            Duplicate Strings in List of Strings to Map containing Count for each String
@@ -162,8 +173,10 @@ public class StreamsApiAllInOne {
                         Integer::sum               // If the string is already in the map, sum the occurrences
                 ));
 
-        System.out.println("\n\n\n5. Duplicate Strings in List of Strings to Map containing Count for each String");
-        CommonUtils.printMap(stringCountMap);
+        if(printFlag.equals("all") || printFlag.equals("5")) {
+            System.out.println("\n\n\n5. Duplicate Strings in List of Strings to Map containing Count for each String");
+            CommonUtils.printMap(stringCountMap);
+        }
 
         /** 6.
            Convert each word's first character to uppercase from a given sentence. | Title Case
@@ -181,9 +194,11 @@ public class StreamsApiAllInOne {
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))  // Capitalize first letter
                 .collect(Collectors.joining(" "));  // Join words back into a sentence
 
-        System.out.println("\n\n\n6. Convert each word's first character to uppercase from a given sentence. | Title Case");
-        System.out.println("Input: " + mySentence);
-        System.out.println("Output: " + result);
+        if(printFlag.equals("all") || printFlag.equals("6")) {
+            System.out.println("\n\n\n6. Convert each word's first character to uppercase from a given sentence. | Title Case");
+            System.out.println("Input: " + mySentence);
+            System.out.println("Output: " + result);
+        }
 
         /** 7.
            Compare input sentence's each word to given count.
@@ -206,9 +221,12 @@ public class StreamsApiAllInOne {
 
         Map<Boolean, List<String>> result1 = Arrays.stream(mySentence.split(" "))  // Split sentence into words
                 .collect(Collectors.partitioningBy(word -> word.length() <= desiredLength));
-        System.out.println("\n\n\n7. Compare input sentence's each word to given count.");
-        System.out.println("Input: " + mySentence + "\nOutput:");
-        CommonUtils.printMap(result1);
+
+        if(printFlag.equals("all") || printFlag.equals("7")) {
+            System.out.println("\n\n\n7. Compare input sentence's each word to given count.");
+            System.out.println("Input: " + mySentence + "\nOutput:");
+            CommonUtils.printMap(result1);
+        }
 
         /** 8a.
            Partition a List of Integers into Even and Odd Numbers
@@ -225,9 +243,12 @@ public class StreamsApiAllInOne {
 
         Map<Boolean, List<Integer>> result2 = numbers.stream()
                 .collect(Collectors.partitioningBy(num -> num % 2 == 0));  // Partition by even/odd
-        System.out.println("\n\n\n8a. Partition a List of Integers into Even and Odd Numbers");
-        System.out.println("Input: " + numbers + "\nOutput:");
-        CommonUtils.printMap(result2);
+
+        if(printFlag.equals("all") || printFlag.equals("8a")) {
+            System.out.println("\n\n\n8a. Partition a List of Integers into Even and Odd Numbers");
+            System.out.println("Input: " + numbers + "\nOutput:");
+            CommonUtils.printMap(result2);
+        }
 
         // 8b. in the above code if we want the output like (even/odd) instead of (true/false):
         /**
@@ -241,9 +262,12 @@ public class StreamsApiAllInOne {
                         entry -> entry.getKey() ? "even" : "odd",  // Map true to "even" and false to "odd"
                         Map.Entry::getValue
                 ));
-        System.out.println("\n\n\n8b. Partition a List of Integers into Even and Odd Numbers");
-        System.out.println("Input: " + numbers + "\nOutput:");
-        CommonUtils.printMap(result3);
+
+        if(printFlag.equals("all") || printFlag.equals("8b")) {
+            System.out.println("\n\n\n8b. Partition a List of Integers into Even and Odd Numbers");
+            System.out.println("Input: " + numbers + "\nOutput:");
+            CommonUtils.printMap(result3);
+        }
 
         /** 9.
          Partition a List of Strings Based on Whether They Start with a Vowel
@@ -263,9 +287,11 @@ public class StreamsApiAllInOne {
                 .collect(Collectors.partitioningBy(word ->
                         word.toLowerCase().matches("^[aeiou].*")));  // Check if the word starts with a vowel
 
-        System.out.println("\n\n\n9. Partition a List of Strings Based on Whether They Start with a Vowel");
-        System.out.println("Input: " + words + "\nOutput:");
-        CommonUtils.printMap(result4);
+        if(printFlag.equals("all") || printFlag.equals("9")) {
+            System.out.println("\n\n\n9. Partition a List of Strings Based on Whether They Start with a Vowel");
+            System.out.println("Input: " + words + "\nOutput:");
+            CommonUtils.printMap(result4);
+        }
 
         /** 10.
          Partition Employees Based on Their Salary
@@ -295,9 +321,11 @@ public class StreamsApiAllInOne {
         Map<Boolean, List<Employee>> result5 = employeeList.stream()
                 .collect(Collectors.partitioningBy(emp -> emp.getEmpSalary().compareTo(salaryThreshold) > 0));
 
-        System.out.println("\n\n\n10. Partition Employees Based on Their Salary");
-        System.out.println("Input Salary: " + salaryThreshold + "\nOutput:");
-        CommonUtils.printEmployeeMapNameIDAndSalary(result5);
+        if(printFlag.equals("all") || printFlag.equals("10")) {
+            System.out.println("\n\n\n10. Partition Employees Based on Their Salary");
+            System.out.println("Input Salary: " + salaryThreshold + "\nOutput:");
+            CommonUtils.printEmployeeMapNameIDAndSalary(result5);
+        }
 
         /** 11.
          Unbounded Random Number Generation
@@ -319,9 +347,12 @@ public class StreamsApiAllInOne {
                 .limit(10) // Limit to 10 numbers
                 .map(String::valueOf) // Convert each integer to string
                 .collect(Collectors.joining(" ")); // Join by space
-        System.out.println("\n\n\n11. Unbounded Random Number Generation");
-        System.out.println("Output:");
-        System.out.println(result6);
+
+        if(printFlag.equals("all") || printFlag.equals("11")) {
+            System.out.println("\n\n\n11. Unbounded Random Number Generation");
+            System.out.println("Output:");
+            System.out.println(result6);
+        }
 
         /** 12.
          Bounded Random Number Generation (within range 1 to 100)
@@ -343,9 +374,12 @@ public class StreamsApiAllInOne {
                 // mapToObj() converts a primitive stream into a stream of objects
                 .mapToObj(String::valueOf) // Convert each integer to string
                 .collect(Collectors.joining(" ")); // Join by space
-        System.out.println("\n\n\n12. Bounded Random Number Generation (within range 1 to 100)");
-        System.out.println("Output:");
-        System.out.println(result7);
+
+        if(printFlag.equals("all") || printFlag.equals("12")) {
+            System.out.println("\n\n\n12. Bounded Random Number Generation (within range 1 to 100)");
+            System.out.println("Output:");
+            System.out.println(result7);
+        }
 
         /** 13.
          Random String Generation (Random Characters)
@@ -366,8 +400,10 @@ public class StreamsApiAllInOne {
                 .mapToObj(c -> String.valueOf((char) c)) // Convert int to character
                 .collect(Collectors.joining()); // Join characters to form the string
 
-        System.out.println("\n\n\n13. Random String Generation (Random Characters)");
-        System.out.println("Output: " + randomString);
+        if(printFlag.equals("all") || printFlag.equals("13")) {
+            System.out.println("\n\n\n13. Random String Generation (Random Characters)");
+            System.out.println("Output: " + randomString);
+        }
 
         /** 14.
          Random String Generation from a Given Set of Words
@@ -388,8 +424,10 @@ public class StreamsApiAllInOne {
                 .limit(wordCount) // Limit to 'wordCount' number of words
                 .collect(Collectors.joining(" ")); // Join words with space
 
-        System.out.println("\n\n\n14. Random String Generation from a Given Set of Words");
-        System.out.println("Output: " + randomWords);
+        if(printFlag.equals("all") || printFlag.equals("14")) {
+            System.out.println("\n\n\n14. Random String Generation from a Given Set of Words");
+            System.out.println("Output: " + randomWords);
+        }
 
         /** 15.
          Find the sum of the max and min number from a list of integers
@@ -406,8 +444,10 @@ public class StreamsApiAllInOne {
         int sum = numbers1.stream().collect(Collectors.summarizingInt(Integer::intValue)).getMax()
                 + numbers1.stream().collect(Collectors.summarizingInt(Integer::intValue)).getMin();
 
-        System.out.println("\n\n\n15. Find the sum of the max and min number from a list of integers");
-        System.out.println("Output: " + sum);
+        if(printFlag.equals("all") || printFlag.equals("15")) {
+            System.out.println("\n\n\n15. Find the sum of the max and min number from a list of integers");
+            System.out.println("Output: " + sum);
+        }
 
         /** 16.
          Find the sum of numbers after removing the min and max from a list of integers
@@ -427,8 +467,10 @@ public class StreamsApiAllInOne {
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        System.out.println("\n\n\n16. Find the sum of numbers after removing the min and max from a list of integers");
-        System.out.println("Output: " + sum2);
+        if(printFlag.equals("all") || printFlag.equals("16")) {
+            System.out.println("\n\n\n16. Find the sum of numbers after removing the min and max from a list of integers");
+            System.out.println("Output: " + sum2);
+        }
 
         /** 17.
          Use parallel stream: Find the sum of squares of all the numbers in a list of integers
@@ -447,8 +489,10 @@ public class StreamsApiAllInOne {
                 .mapToInt(num -> num * num)
                 .sum();
 
-        System.out.println("\n\n\n17. Use parallel stream: Find the sum of squares of all the numbers in a list of integers");
-        System.out.println("Output: " + sumOfSquares);
+        if(printFlag.equals("all") || printFlag.equals("17")) {
+            System.out.println("\n\n\n17. Use parallel stream: Find the sum of squares of all the numbers in a list of integers");
+            System.out.println("Output: " + sumOfSquares);
+        }
 
         /** 18.
          Use parallel stream: Find the max number from a large list of integers
@@ -468,8 +512,10 @@ public class StreamsApiAllInOne {
                 .max()
                 .orElseThrow(() -> new RuntimeException("List is empty"));
 
-        System.out.println("\n\n\n18. Use parallel stream: Find the max number from a large list of integers");
-        System.out.println("Output: " + maxValue);
+        if(printFlag.equals("all") || printFlag.equals("18")) {
+            System.out.println("\n\n\n18. Use parallel stream: Find the max number from a large list of integers");
+            System.out.println("Output: " + maxValue);
+        }
 
         /** 19.
          Use parallel stream: Count the total number of words from a list of sentences(Strings)
@@ -496,8 +542,10 @@ public class StreamsApiAllInOne {
                 .mapToLong(sentence -> sentence.split(" ").length)
                 .sum();
 
-        System.out.println("\n\n\n19. Use parallel stream: Count the total number of words from a list of sentences(Strings)");
-        System.out.println("Output: " + wordCount1);
+        if(printFlag.equals("all") || printFlag.equals("19")) {
+            System.out.println("\n\n\n19. Use parallel stream: Count the total number of words from a list of sentences(Strings)");
+            System.out.println("Output: " + wordCount1);
+        }
 
         /** 20.
          Use parallel stream: Find the longest string from a list of Strings
@@ -516,8 +564,10 @@ public class StreamsApiAllInOne {
                 .reduce((word1, word2) -> word1.length() > word2.length() ? word1 : word2)
                 .orElse("No words found");
 
-        System.out.println("\n\n\n20. Use parallel stream: Find the longest string from a list of Strings");
-        System.out.println("Output: " + longestWord);
+        if(printFlag.equals("all") || printFlag.equals("20")) {
+            System.out.println("\n\n\n20. Use parallel stream: Find the longest string from a list of Strings");
+            System.out.println("Output: " + longestWord);
+        }
 
         /** 21.
          Use parallel stream: Employees group by age and then count of Employees of that age
@@ -549,8 +599,10 @@ public class StreamsApiAllInOne {
                                 LinkedHashMap::new
                         ));;
 
-        System.out.println("\n\n\n21. Use parallel stream: Employees group by age and then count of Employees of that age");
-        CommonUtils.printMap(ageGroupCount);
+        if(printFlag.equals("all") || printFlag.equals("21")) {
+            System.out.println("\n\n\n21. Use parallel stream: Employees group by age and then count of Employees of that age");
+            CommonUtils.printMap(ageGroupCount);
+        }
 
         /** 22.
          Check if 2 words are Anagrams.
@@ -593,9 +645,12 @@ public class StreamsApiAllInOne {
 
             isAnagram = sortedWord1.equals(sortedWord2);
         }
-        System.out.println("\n\n\n22. Check if 2 words are Anagrams.");
-        System.out.println("Input: " + word1 + " and " + word2);
-        System.out.println("Output: " + isAnagram);
+
+        if(printFlag.equals("all") || printFlag.equals("22")) {
+            System.out.println("\n\n\n22. Check if 2 words are Anagrams.");
+            System.out.println("Input: " + word1 + " and " + word2);
+            System.out.println("Output: " + isAnagram);
+        }
 
         /** 23.
          String compression.
@@ -626,9 +681,11 @@ public class StreamsApiAllInOne {
                 })
                 .collect(Collectors.joining());
 
-        System.out.println("\n\n\n23. String compression.");
-        System.out.println("Input: " + inputString);
-        System.out.println("Output: " + outputString);
+        if(printFlag.equals("all") || printFlag.equals("23")) {
+            System.out.println("\n\n\n23. String compression.");
+            System.out.println("Input: " + inputString);
+            System.out.println("Output: " + outputString);
+        }
 
         /** 24.
          Employee -> first sort by Name and then if same name, sort by Salary
@@ -660,8 +717,10 @@ public class StreamsApiAllInOne {
                         .thenComparing(Employee::getEmpSalary))
                 .collect(Collectors.toList());
 
-        System.out.println("\n\n\n24. Employee -> first sort by Name and then if same name, sort by Salary");
-        CommonUtils.printEmployeeMapNameIDAndSalary(sortedEmployees);
+        if(printFlag.equals("all") || printFlag.equals("24")) {
+            System.out.println("\n\n\n24. Employee -> first sort by Name and then if same name, sort by Salary");
+            CommonUtils.printEmployeeMapNameIDAndSalary(sortedEmployees);
+        }
 
         /** 25.
          Find the first repeating character from a given String input
@@ -682,9 +741,40 @@ public class StreamsApiAllInOne {
                 .findFirst()
                 .orElse(null);
 
-        System.out.println("\n\n\n25. Find the first repeating character from a given String input");
-        System.out.println("Input: " + input1);
-        System.out.println("Output: " + firstRepeatingChar);
+        if(printFlag.equals("all") || printFlag.equals("25")) {
+            System.out.println("\n\n\n25. Find the first repeating character from a given String input");
+            System.out.println("Input: " + input1);
+            System.out.println("Output: " + firstRepeatingChar);
+        }
+
+        /** 26.
+         From a list of employees, create a Map<EmployeeID, Employee>.
+         This Map can be later used for maybe searching if an Employee ID is present in our list or not.
+         This search will be much faster than doing a linear search from the list of Employees.
+
+         Input:
+         Employee{empId=1, empName='Name 1', empDepartment='HR Department', empSalary=100.0, age=30}
+         Employee{empId=2, empName='Name 2', empDepartment='HR Department', empSalary=300.0, age=26}
+         Employee{empId=3, empName='Name 3', empDepartment='IT Department', empSalary=600.0, age=45}
+         Employee{empId=4, empName='Name 4', empDepartment='HR Department', empSalary=200.0, age=55}
+         Employee{empId=5, empName='Name 5', empDepartment='IT Department', empSalary=400.0, age=60}
+
+         Output:
+         1 : Employee{empId=1, empName='Name 1', empDepartment='HR Department', empSalary=100.0, age=30}
+         2 : Employee{empId=2, empName='Name 2', empDepartment='HR Department', empSalary=300.0, age=26}
+         3 : Employee{empId=3, empName='Name 3', empDepartment='IT Department', empSalary=600.0, age=45}
+         4 : Employee{empId=4, empName='Name 4', empDepartment='HR Department', empSalary=200.0, age=55}
+         5 : Employee{empId=5, empName='Name 5', empDepartment='IT Department', empSalary=400.0, age=60}
+
+         */
+        List<Employee> employeeList1 = EmployeesUtil.getEmployeeList();
+        Map<Integer, Employee> empMap = employeeList1.stream()
+                .collect(Collectors.toMap(Employee::getEmpId, Function.identity()));
+
+        if(printFlag.equals("all") || printFlag.equals("26")){
+            System.out.println("\n\n\n26. From a list of employees, create a Map<EmployeeID, Employee>.");
+            CommonUtils.printMap(empMap);
+        }
 
     }
 }
